@@ -109,6 +109,112 @@ e.g. With your query to add a new entry, youll have to pass in the variables for
 Now try passing in different variables to your functions and getting/editing/deleting the correct data you are trying to select.
 
 
+### Connection Pooling
+
+What we have done above is create a single connction to our database on our system. We have created a single client, connected to our database, and then closed that connection. This can be an expensive operation. It means that we are establishing a connection to our database, but there is an alternate way of connecting. We can use a connection pool.
+
+A connection pool is a group of database connections that are just sitting on your system waiting to be used. What this means is that when a request comes through looking to get information from your database, a connection is already there waiting and can be given to your application for that request or transaction. In summary, connection pooling is much faster, especially as applications become larger and you may have multiple people performing operations on your database at the same time.
+
+We can use node-pg to write out our database queries using connection pooling instead of creating our own connection each time. The first two lines are the same as our previous file.
+
+```js
+var pg = require('pg');
+var connectionString = 'postgres://localhost:5432/pgintro';
+```
+
+Now we can use slightly different syntax to connect to our database using pg.connect.
+
+```js
+pg.connect(connectionString, function(err, client, done) {
+
+});
+```
+
+This initializes a connection pool. There are a few configurations you can change, such as how many connections you open and how long these connections will be kept open for once idle (default is 20 connections open, and they will close if idle for 30 seconds)
+
+Within our connect function, we pass in our string with the port for our local databse, and then have a callback function afterwards. First, let's handle the possibility of an error. This error will fire if anything goes wrong fetching a client from the pool. We also want to call done() in that error handler, to end the connection attempt due to the error.
+
+```js
+pg.connect(connectionString, function(err, client, done) {
+
+    if(err) {
+        done();
+        console.log('Error fetching Client : ' + err);
+    }
+
+});
+```
+
+Next, if there are no errors, we can set up our query. We want to set this as a variable because, as you'll see in a minute, we can perform actions depending on whats coming back from the database.
+
+```js
+pg.connect(connectionString,function(err, client, done) {
+
+    if(err) {
+        done();
+        console.log('Error fetching Client : ' + err);
+    }
+
+    var query = client.query('SELECT * FROM teas');
+});
+```
+
+Finally, there are two events we need to handle. The first is getting data back from the database, and the second is what happens when we have all the data back.
+
+```js
+pg.connect(connectionString,function(err, client, done) {
+
+    if(err) {
+        done();
+        console.log('Error fetching Client : ' + err);
+    }
+
+    var query = client.query('SELECT * FROM cities');
+
+    query.on('row', function(row) {
+        console.log(row);
+    });
+
+    query.on('end', function() {
+        done();
+    });
+
+});
+```
+
+If we run this, we do get the same issue we had when we were using the single client option, in the terminal the database connection is still open and the console is still 'running'. However, with connection pooling we don't have to explicitly close the connection. After 30 seconds of being inactive (the default setting, this can be changed) the connection will automatically close. Run this file with node and wait for the terminal to move onto the next line.
+
+However, if we want we can close the connection after our done() callback.
+
+```js
+ query.on('end', function() {
+        done();
+        pg.end();
+    });
+```
+
+### Exercises
+
+1. Write out the same routes as above, in functions, using client pooling. This time, start by writing them out in functions taking in the necessary arguments. The functions should be :
+ - Get all cities
+ - Get single city
+ - Add single city
+ - Edit single city
+ - Delete single city
+
+2. Instead of console.logging the query results, return them and console.log the function.
+
+e.g.
+
+```js
+console.log(getAllCities())
+```
+
+should return all of the cities once. To do this you will have to think about how to get each row from the database, then return all of the rows at once.
+
+
+
+
 
 
 
