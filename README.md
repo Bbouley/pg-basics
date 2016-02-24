@@ -6,13 +6,13 @@ So far we've been looking at SQL databases, and express routes, but seperately. 
 
 ### Project Setup
 
-Set up a new project directory and run npm init. Just go with all the defaults. Next up, add a .gitignore file in the root of your project and add 'node_modules' to it. Finally, add a singleClient.js file.
+Set up a new project directory and run npm init. Just go with all the defaults. Next up, add a .gitignore file in the root of your project and add 'node_modules' to it. Finally, add a 'singleClient.js' file.
 
 ### The node-postgres Module
 
-[pg](https://github.com/brianc/node-postgres) is a PostgreSQL client for node. What that means is that we can use it to interface with our database which in this case is the server. In case you're confused, when dealing with databases/servers/clients a general rule is that the client is whoever or whatever is sending a query, and the server is whatever responds to that query with something.
+[node-postgres](https://github.com/brianc/node-postgres) is a PostgreSQL client for node. What that means is that we can use it to interface with our database, which in this case is the server. In case you're confused, when dealing with databases/servers/clients a general rule is that the client is whoever or whatever is sending a query, and the server is whatever responds to that query with something.
 
-Let's add pg into our project. Run the following in your command line, in your project directory:
+Let's add node-pg into our project. Run the following in your command line, in your project directory:
 
 ```sh
 $ npm install pg --save
@@ -55,7 +55,7 @@ var client = new pg.Client(connectionString);
 client.connect();
 ```
 
-Let's go over everything that's happening here. We have already defined where our database is (our connectionString). We then want to create a client to connect to that database. In this case, our database that is running on port:5432 is the server. When we query it using node-pg, we are the client. We then run client.connect() to open up a connection to that database that will allow is to query it. So our code so far looks like this:
+Let's go over everything that's happening here. We have already defined where our database is (our connectionString). We then want to create a client to connect to that database. In this case, our database that is running on port:5432 is the server. When we query it using node-pg, we are the client. We then run client.connect() to open up a connection to that database that will allow us to query it. So our code so far looks like this:
 
 ```js
 var pg = require('pg');
@@ -81,7 +81,7 @@ $ node singleClient.js
 
 ```
 
-So what we are doing is sending a new query through our database connection, then writing our SQL query and adding a callback function that fires once we have a result from our database. One important thing to note here is that we are loggin result.rows. In this particular case, we can also console.log(result) and get the same thing back, but when a query runs and we are getting results back node-pg returns data row by row.
+So what we are doing is sending a new query through our database connection, then writing our SQL query and adding a callback function that fires once we have a result from our database. One important thing to note here is that we are logging result.rows. In this particular case, we can also console.log(result) and get the same thing back, but when a query runs and we are getting results back node-pg returns data row by row.
 
 Another thing you may have noticed is that the console has not moved on to the next line. It is still 'running'. This is because we have opened a connection to our database, but not closed it. We have to close it in the callback function of our query, because otherwise due to async issues, it would close the database connection before we get our data back.
 
@@ -94,9 +94,9 @@ client.query("SELECT * FROM cities", function(err, result) {
 
 ### Exercises
 
-1. Create a query to add a new entry to city to your database
-2. Create a query to get all of the entries from your database, console.log the results
-3. Create a query to just find one of your entries by id
+1. Create a query to add a new city to your database
+2. Create a query to get all of the cities from your database, console.log the results
+3. Create a query to just find one of your cities by id
 4. Create a query to update one of your cities with new information
 5. Create a query to delete one of your cities
 
@@ -104,16 +104,16 @@ NOTE : Calling client.end() closes the database connection, so you will want to 
 
 Next, refactor each query into a function, that takes in the arguments needed for the query.
 
-e.g. With your query to add a new entry, youll have to pass in the variables for a new city (name, country, rating) and for your query to get a single entry, you will need to pass in an id. What do you need to pass in to your edit function and your delete function?
+e.g. With your query to add data, youll have to pass in the variables for a new city (name, country, rating) and for your query to get a single city, you will need to pass in an id. What do you need to pass in to your edit function and your delete function?
 
 Now try passing in different variables to your functions and getting/editing/deleting the correct data you are trying to select.
 
 
 ### Connection Pooling
 
-What we have done above is create a single connction to our database on our system. We have created a single client, connected to our database, and then closed that connection. This can be an expensive operation. It means that we are establishing a connection to our database, but there is an alternate way of connecting. We can use a connection pool.
+What we have done above is create a single connection to our database on our system. We have created a single client, connected to our database, and then closed that connection. This can be an expensive operation. It means that we are establishing a connection to our database, but there is an alternate way of connecting. We can use a connection pool.
 
-A connection pool is a group of database connections that are just sitting on your system waiting to be used. What this means is that when a request comes through looking to get information from your database, a connection is already there waiting and can be given to your application for that request or transaction. In summary, connection pooling is much faster, especially as applications become larger and you may have multiple people performing operations on your database at the same time.
+A connection pool is a group of database connections that are just sitting on your computer waiting to be used. What this means is that when a request comes through looking to get information from your database, a connection is already there waiting, and can be given to your application for that request or transaction. In summary, connection pooling is much faster, especially as applications become larger and you may have multiple people performing operations on your database at the same time.
 
 We can use node-pg to write out our database queries using connection pooling instead of creating our own connection each time. The first two lines are the same as our previous file.
 
