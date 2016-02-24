@@ -23,17 +23,27 @@ client.connect();
 // });
 
 client.query("SELECT * FROM cities", function(err, result) {
+    console.log('res : ', result.rows);
+    // client.end();
+});
+
+client.query("SELECT * FROM cities WHERE id=1", function(err, result) {
+    console.log(result.rows);
+    // client.end();
+});
+
+client.query("SELECT * FROM cities WHERE id=2", function(err, result) {
     console.log(result.rows);
     client.end();
 });
 
 
-function getAll () {
-    client.query("SELECT * FROM cities", function(err, result) {
-        console.log(result.rows);
-        client.end();
-    });
-}
+// function getAll () {
+//     client.query("SELECT * FROM cities", function(err, result) {
+//         console.log(result.rows);
+//         client.end();
+//     });
+// }
 
-getAll();
+// getAll();
 

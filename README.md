@@ -92,6 +92,21 @@ client.query("SELECT * FROM cities", function(err, result) {
 });
 ```
 
+### Exercises
+
+1. Create a query to add a new entry to city to your database
+2. Create a query to get all of the entries from your database, console.log the results
+3. Create a query to just find one of your entries by id
+4. Create a query to update one of your cities with new information
+5. Create a query to delete one of your cities
+
+NOTE : Calling client.end() closes the database connection, so you will want to make sure that is in the last query you are calling. You can only call this once unless you want to reopen the connection each time, so think carefully about where you need to put it.
+
+Next, refactor each query into a function, that takes in the arguments needed for the query.
+
+e.g. With your query to add a new entry, youll have to pass in the variables for a new city (name, country, rating) and for your query to get a single entry, you will need to pass in an id. What do you need to pass in to your edit function and your delete function?
+
+Now try passing in different variables to your functions and getting/editing/deleting the correct data you are trying to select.
 
 
 
