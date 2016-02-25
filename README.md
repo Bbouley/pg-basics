@@ -59,7 +59,7 @@ Let's go over everything that's happening here. We have already defined where ou
 
 ```js
 var pg = require('pg');
-var connectionString = 'postgres://localhost:5432/pgclientside';
+var connectionString = 'postgres://localhost:5432/pgintro';
 var client = new pg.Client(connectionString);
 client.connect();
 ```
