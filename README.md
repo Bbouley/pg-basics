@@ -59,7 +59,7 @@ Let's go over everything that's happening here. We have already defined where ou
 
 ```js
 var pg = require('pg');
-var connectionString = 'postgres://localhost:5432/pgintro';
+var connectionString = 'postgres://localhost:5432/pgintrods';
 var client = new pg.Client(connectionString);
 client.connect();
 ```
@@ -95,7 +95,7 @@ client.query("SELECT * FROM cities", function(err, result) {
 ### Exercises
 
 1. Create a query to add a new entry to city to your database
-2. Create a query to get all of the entries from your database, console.log the results
+2. Create a query to get all of the entries from your cities table, console.log the results
 3. Create a query to just find one of your entries by id
 4. Create a query to update one of your cities with new information
 5. Create a query to delete one of your cities
