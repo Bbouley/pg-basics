@@ -30,7 +30,7 @@ The next step is to set up a database that we can start making queries against. 
     - Name
     - Country
     - Rating (has to be between 1 and 10)
-3. Then run the sql query to add data into that table. Add 3 cities of your choice.
+3. Then run the sql queries to add data into that table. Add 3 cities of your choice.
 
 ### Querying with node-postgres
 
